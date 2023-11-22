@@ -32,8 +32,8 @@ const transporter = nodemailer.createTransport({
 const db = new pg.Client({
     "user": "postgres",
     "host": "localhost",
-    "database": "LearningHowtoCode",
-    "password": "123456",
+    "database": "Aprendiendoaprogramar",
+    "password": "1234",
     "port": 5432
 });
 
@@ -57,6 +57,14 @@ app.get("/login", function(req,res){
 
 app.get("/home", (req,res) =>{
     res.render("home.ejs");
+});
+
+app.get("/ranking", function(req,res){
+    res.render("ranking.ejs");
+});
+
+app.get("/foro", function(req,res){
+    res.render("foro.ejs");
 });
 
 //Metodo para guardar la informacion de los usuarios al ingresar sus datos
