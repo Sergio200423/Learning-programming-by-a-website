@@ -1,15 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form action="/register.ejs" method="post">
-        <input name="username" required type="text" placeholder="username">
-        <input name="password" required type="text" placeholder="password">
-        <input type="submit">
+<%- include("partials/header.ejs") %>
+    <form action="/register" method="post">
+
+        <div class="flex-container">
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingPassword" placeholder="2022-0353U" name="carnet">
+                <label for="floatingPassword">Carnet</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingPassword" placeholder="Junior14" name="nombreUsuario">
+                <label for="floatingPassword">Nombre de Usuario</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="correo">
+                <label for="floatingInput">Correo electronico</label>
+            </div>
+    
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Mypassword1234" name="contra">
+                <label for="floatingPassword">Contrasena</label>
+            </div>
+    
+            <input type="submit" class="btn btn-dark">
+        </div>
     </form>
-</body>
-</html>
+        
