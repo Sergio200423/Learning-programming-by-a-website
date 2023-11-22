@@ -4,6 +4,8 @@ import gamernamer from "gamer-namer";
 import body_parser from "body-parser";
 import passport from "passport";
 import session from "express-session";
+import pg from "pg";
+import nodemailer from "nodemailer";
 
 var randomPlayerName = gamernamer.generateName();
 
@@ -19,29 +21,29 @@ app.use(body_parser.urlencoded({
 
 app.set('view engine', 'ejs');
 
-// app.use(session({
-//     secret: 'Lenovo.',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: { secure: true }
-//   }));
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+    user: 'sergiodanielxd2004@gmail.com',
+    pass: 'xzdb vffr pbcb dbfz'
+  }
+});
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+const db = new pg.Client({
+    "user": "postgres",
+    "host": "localhost",
+    "database": "LearningHowtoCode",
+    "password": "123456",
+    "port": 5432
+});
+
+db.connect();
 
 
-// passport.use(User.createStrategy());
 
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
-//Metodo para renderizar la pagina de register
 app.get("/", (req, res) =>{
-    // if(req.isAuthenticated()){
-    //     res.render("index.ejs");
-    // }
-    // else{
-    //     res.redirect("register");
-    // }
+   
+    res.render("index.ejs");
 });
 
 app.get("/register", function(req,res){
@@ -54,38 +56,64 @@ app.get("/login", function(req,res){
 });
 
 //Metodo para guardar la informacion de los usuarios al ingresar sus datos
-app.post("/register", function(req,res){
-    // User.register({email:req.body.username}, req.body.password, function(err, user) {
-    //     // if (err) { 
-    //     //     console.log(err);
-    //     //     res.redirect("register");
-    //     //  }
-    //     //  else{
-    //     //     passport.authenticate('local') (req, res, function(){ 
-    //     //         res.redirect('/');
-    //     //     });
-    //     //  }
-    // });
+app.post("/register", async function(req,res){
+    const carnetIngresado = req.body.carnet;
+    const usuarioEncontrado = await db.query("SELECT contra FROM usuario where carnet = $1", [carnetIngresado]);
+
+    if(usuarioEncontrado.rows.length == 0)
+    {
+        const nombreUsuario = req.body.nombreUsuario;
+        const contra = req.body.contra;
+        const correo = req.body.correo;
+        await db.query("INSERT INTO usuario(carnet, nombreUsuario, correo, contra) VALUES($1, $2, $3, $4)", [carnetIngresado, nombreUsuario, correo, contra]);
+
+        const mailOptions = {
+        from: 'sergiodanielxd2004@gmail.com',
+        to: correo,
+        subject: 'Sending Email using Node.js',
+        text: 'That was easy!'
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+        console.log(error);
+        } else {
+        console.log('Email sent: ' + info.response);
+        }
+        });
+    }
+    
+    else{
+        document.alert("El usuario que ingreso ya ha sido registrado. Inicie sesion");
+        res.redirect("/login");
+    }
+
+    
 });
 
 //Metodo para enviarlos a la pagina principal una vez se hayan logeado
-app.post("login", function(req,res){
-    const user = new User({
-        email: String,
-        password: String
-    });
+app.post("/login", async function(req,res){
+    const carnetIngresado = req.body["carnet"];
+    const contraIngresada = req.body["contra"];
 
-    req.login(user, function(err) {
-        // if (err) 
-        // { 
-        //     return next(err); 
-        // }
-        // else{
-        //         passport.authenticate('local') (req, res, function(){ 
-        //             res.redirect('/');
-        //         });
-        // }
-      });
+    const resultado = await db.query("SELECT contra FROM usuario where carnet = $1", [carnetIngresado]);
+    if(resultado.rows.length != 0)
+    {
+        const contraBaseDatos = resultado.rows[0];
+
+        if(contraBaseDatos['contra'] === contraIngresada)
+        {
+            res.render("index.ejs");
+        }
+
+        else{
+            res.redirect("/login");
+        }
+    }
+    else{
+        res.redirect("/login");
+    }
+    
 });
 
 app.listen(port, () =>{

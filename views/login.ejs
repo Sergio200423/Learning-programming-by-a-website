@@ -1,0 +1,19 @@
+<%- include("partials/header.ejs") %>
+
+<form action="/login" method="post">
+
+    <div class="flex-container">
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingPassword" placeholder="2022-0353U" name="carnet">
+            <label for="floatingPassword">Carnet</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Mypassword1234" name="contra">
+            <label for="floatingPassword">Contrasena</label>
+        </div>
+
+        <input type="submit" class="btn btn-dark">
+    </div>
+</form>
