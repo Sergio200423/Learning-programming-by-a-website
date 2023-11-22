@@ -1,19 +1,40 @@
 <%- include("partials/header.ejs") %>
 
-<form action="/login" method="post">
-
-    <div class="flex-container">
-
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingPassword" placeholder="2022-0353U" name="carnet">
-            <label for="floatingPassword">Carnet</label>
+<div class="container">
+    <div class="login">
+        <div class="container">
+            <h1>Log in</h1>
+            <form method="POST" action="/login">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingPassword" placeholder="2022-0353U" name="carnet">
+                    <label for="floatingPassword">Carnet</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Mypassword1234" name="contra">
+                    <label for="floatingPassword">Contrasena</label>
+                </div>
+                <button type="submit">Log in</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </form>
+            <div class="clearfix"></div>
+            <span class="copyright">&copy;2023</span>
         </div>
-
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Mypassword1234" name="contra">
-            <label for="floatingPassword">Contrasena</label>
-        </div>
-
-        <input type="submit" class="btn btn-dark">
     </div>
-</form>
+    <div class="register">
+        <div class="container">
+            <i class="fas fa-user-plus fa-5x"></i>
+            <h2>Hello,friend!</h2>
+            <p>Don't have an account yet?</p>
+            <a href="{{ url_for('register') }}"><button>Register <i
+                        class="fas fa-arrow-circle-right"></i></button></a>
+        </div>
+    </div>
+</div>
