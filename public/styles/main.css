@@ -9,3 +9,8 @@ body{
     align-items: center;
     flex-direction:  column;
 }
+
+#iconUser{
+    height: 45px;
+    width: 45px;
+}

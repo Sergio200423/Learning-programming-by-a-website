@@ -12,7 +12,7 @@ var randomPlayerName = gamernamer.generateName();
 const port = 3000;
 
 const app = express();
-
+ 
 app.use(express.static("public"));
 
 app.use(body_parser.urlencoded({
@@ -55,6 +55,10 @@ app.get("/login", function(req,res){
     res.render("login");
 });
 
+app.get("/home", (req,res) =>{
+    res.render("home.ejs");
+});
+
 //Metodo para guardar la informacion de los usuarios al ingresar sus datos
 app.post("/register", async function(req,res){
     const carnetIngresado = req.body.carnet;
@@ -79,8 +83,10 @@ app.post("/register", async function(req,res){
         console.log(error);
         } else {
         console.log('Email sent: ' + info.response);
+        // res.render("home.ejs");
         }
         });
+
     }
     
     else{
