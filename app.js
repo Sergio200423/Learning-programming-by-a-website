@@ -34,13 +34,8 @@ const transporter = nodemailer.createTransport({
 const db = new pg.Client({
     "user": "postgres",
     "host": "localhost",
-<<<<<<< HEAD
     "database": "LearningHowtoCode",
     "password": "123456",
-=======
-    "database": "Aprendiendoaprogramar",
-    "password": "1234",
->>>>>>> c0e57d0dce38ef21c9b9774fc7ed8305a399d009
     "port": 5432
 });
 
