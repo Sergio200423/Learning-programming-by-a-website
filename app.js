@@ -34,8 +34,8 @@ const transporter = nodemailer.createTransport({
 const db = new pg.Client({
     "user": "postgres",
     "host": "localhost",
-    "database": "Aprendiendoaprogramar",
-    "password": "1234",
+    "database": "LearningHowtoCode",
+    "password": "123456",
     "port": 5432
 });
 
@@ -150,6 +150,11 @@ app.post("/login", async function(req,res){
     }
     
 });
+
+app.post("/foro", async function(req,res){
+    
+});
+
 
 app.listen(port, () =>{
     console.log("hola muchachos");
