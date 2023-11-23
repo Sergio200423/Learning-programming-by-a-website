@@ -34,8 +34,8 @@ const transporter = nodemailer.createTransport({
 const db = new pg.Client({
     "user": "postgres",
     "host": "localhost",
-    "database": "postgres",
-    "password": "mdrgcbrj28",
+    "database": "Aprendiendoaprogramar",
+    "password": "1234",
     "port": 5432
 });
 
@@ -84,9 +84,9 @@ app.post("/register", async function(req,res){
         await db.query("INSERT INTO usuario(carnet, nombreUsuario, correo, contra) VALUES($1, $2, $3, $4)", [carnetIngresado, nombreUsuario, correo, contra]);
 
         const resultado = await db.query("SELECT idUsuario FROM usuario WHERE nombreusuario= $1", [nombreUsuario]);
-        idUsuario = resultado.rows[0]['idUsuario'];
+        idUsuario = resultado.rows[0];
 
-        console.log(idUsuario);
+        await db.query("INSERT INTO ranking(usuario_id, puntuacion) VALUES($1, 0)", [idUsuario['idusuario']]);
 
         const mailOptions = {
         from: 'sergiodanielxd2004@gmail.com',
