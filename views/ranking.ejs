@@ -10,10 +10,11 @@
     <tbody>
         <% listaUsuarioRango.forEach((element)=>{%>
             <tr>
-                <td>Fila 1, Celda 1</td>
-                <td>Fila 1, Celda 2</td>
-                <td>Fila 1, Celda 3</td>
+                <td>#<%= contador+1 %></td>
+                <td><%= listaUsuarioNombre[contador]["nombreusuario"] %></td>
+                <td><%= element["puntuacion"] %></td>
             </tr>
+            <% contador++ %>
         <%})%>
   
     </tbody>

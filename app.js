@@ -61,9 +61,21 @@ app.get("/home", (req,res) =>{
     res.render("home.ejs");
 });
 
-app.get("/ranking", function(req,res){
+app.get("/ranking", async function(req,res){
+    let contador = 0;
+    const consulta = await db.query("SELECT * FROM  ranking ORDER BY puntuacion ASC");
+    let listaUsuarioRango = [];
+    let listaUsuarioNombre = [];
 
-    res.render("ranking.ejs");
+    for(let i = 0; i < consulta.rowCount; i++){
+        listaUsuarioRango.push(consulta.rows[i]);
+        const consulta2 = await db.query("SELECT usuario.nombreusuario FROM  usuario inner join ranking on ranking.usuario_id = usuario.idusuario where ranking.usuario_id = $1", [consulta.rows[i]["usuario_id"]]);       
+
+        listaUsuarioNombre.push(consulta2.rows[0]);
+    } 
+    console.log(listaUsuarioRango);
+    console.log(listaUsuarioNombre);
+    res.render("ranking.ejs",{listaUsuarioRango: listaUsuarioRango,listaUsuarioNombre: listaUsuarioNombre, contador: contador});
 });
 
 app.get("/foro", function(req,res){
