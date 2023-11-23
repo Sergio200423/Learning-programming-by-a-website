@@ -9,6 +9,8 @@ import nodemailer from "nodemailer";
 
 var randomPlayerName = gamernamer.generateName();
 
+let idUsuario; 
+
 const port = 3000;
 
 const app = express();
@@ -32,8 +34,13 @@ const transporter = nodemailer.createTransport({
 const db = new pg.Client({
     "user": "postgres",
     "host": "localhost",
+<<<<<<< HEAD
     "database": "LearningHowtoCode",
     "password": "123456",
+=======
+    "database": "Aprendiendoaprogramar",
+    "password": "1234",
+>>>>>>> c0e57d0dce38ef21c9b9774fc7ed8305a399d009
     "port": 5432
 });
 
@@ -59,8 +66,21 @@ app.get("/home", (req,res) =>{
     res.render("home.ejs");
 });
 
-app.get("/ranking", function(req,res){
-    res.render("ranking.ejs");
+app.get("/ranking", async function(req,res){
+    let contador = 0;
+    const consulta = await db.query("SELECT * FROM  ranking ORDER BY puntuacion ASC");
+    let listaUsuarioRango = [];
+    let listaUsuarioNombre = [];
+
+    for(let i = 0; i < consulta.rowCount; i++){
+        listaUsuarioRango.push(consulta.rows[i]);
+        const consulta2 = await db.query("SELECT usuario.nombreusuario FROM  usuario inner join ranking on ranking.usuario_id = usuario.idusuario where ranking.usuario_id = $1", [consulta.rows[i]["usuario_id"]]);       
+
+        listaUsuarioNombre.push(consulta2.rows[0]);
+    } 
+    console.log(listaUsuarioRango);
+    console.log(listaUsuarioNombre);
+    res.render("ranking.ejs",{listaUsuarioRango: listaUsuarioRango,listaUsuarioNombre: listaUsuarioNombre, contador: contador});
 });
 
 app.get("/foro", function(req,res){
@@ -77,13 +97,19 @@ app.post("/register", async function(req,res){
         const nombreUsuario = req.body.nombreUsuario;
         const contra = req.body.contra;
         const correo = req.body.correo;
+
         await db.query("INSERT INTO usuario(carnet, nombreUsuario, correo, contra) VALUES($1, $2, $3, $4)", [carnetIngresado, nombreUsuario, correo, contra]);
+
+        const resultado = await db.query("SELECT idUsuario FROM usuario WHERE nombreusuario= $1", [nombreUsuario]);
+        idUsuario = resultado.rows[0];
+
+        await db.query("INSERT INTO ranking(usuario_id, puntuacion) VALUES($1, 0)", [idUsuario['idusuario']]);
 
         const mailOptions = {
         from: 'sergiodanielxd2004@gmail.com',
         to: correo,
         subject: 'Sending Email using Node.js',
-        text: 'That was easy!'
+        text: 'Bienvenido a la Comunidad CodigoConClase'
         };
 
         transporter.sendMail(mailOptions, function(error, info){
@@ -98,7 +124,7 @@ app.post("/register", async function(req,res){
     }
     
     else{
-        document.alert("El usuario que ingreso ya ha sido registrado. Inicie sesion");
+        
         res.redirect("/login");
     }
 

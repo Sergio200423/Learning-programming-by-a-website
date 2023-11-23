@@ -1,0 +1,22 @@
+<%- include("partials/header.ejs") %>
+<table class="table">
+    <thead class="table-light">
+      <tr>
+        <th>Posición</th>
+        <th>User</th>
+        <th>Puntuación</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% listaUsuarioRango.forEach((element)=>{%>
+            <tr>
+                <td>#<%= contador+1 %></td>
+                <td><%= listaUsuarioNombre[contador]["nombreusuario"] %></td>
+                <td><%= element["puntuacion"] %></td>
+            </tr>
+            <% contador++ %>
+        <%})%>
+  
+    </tbody>
+  </table>
+  
